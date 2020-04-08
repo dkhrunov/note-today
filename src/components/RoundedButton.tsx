@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Button } from "react-native";
-import ThemeColors from "../shared/themeColors";
+import ThemeColors from "../shared/ThemeColors";
 
 const RoundedButton = (props) => {
   const type: ButtonType = props.type;

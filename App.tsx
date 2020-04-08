@@ -4,7 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import HomeScreen from "./src/screens/HomeScreen";
 import NoteScreen from "./src/screens/NoteScreen";
 import AddNoteScreen from "./src/screens/AddNoteScreen";
-import ThemeColors from "./src/shared/themeColors";
+import ThemeColors from "./src/shared/ThemeColors";
 
 const ThemeNavigation = {
   headerStyle: {

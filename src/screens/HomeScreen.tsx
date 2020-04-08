@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { SafeAreaView, AsyncStorage, StyleSheet } from "react-native";
-import { SearchBar, ListItem } from "react-native-elements";
+import { SafeAreaView, AsyncStorage, StyleSheet, Button } from "react-native";
+import { SearchBar } from "react-native-elements";
 import NoteList from "../components/NoteList";
 import AddNoteButton from "../components/AddNoteButton";
 import { INote } from "../components/Note";
-import ThemeColors from "../shared/themeColors";
+import ThemeColors from "../shared/ThemeColors";
 
 const HomeScreen = (props) => {
   const { navigation } = props;
@@ -27,11 +27,13 @@ const HomeScreen = (props) => {
   const refreshNotes = () =>
     getAllNotes().then((notes: Array<INote>) => setNotes(notes));
 
-  // Проблема с тем что список обновляется только при загрузке страницы,
-  // а если сделать без [] то бесконечный цикл
-  useEffect(() => {
+  const clearAll = async () => {
+    await AsyncStorage.clear();
     refreshNotes();
-  }, []);
+  };
+
+  // TODO отписка от addListener
+  useEffect(() => navigation.addListener("focus", () => refreshNotes()), []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -48,6 +50,7 @@ const HomeScreen = (props) => {
           buttonStyle: styles.cancelButton,
         }}
       />
+      <Button title="clear all" onPress={clearAll} />
       <NoteList navigation={navigation} notes={notes} />
       <AddNoteButton navigation={navigation} />
     </SafeAreaView>

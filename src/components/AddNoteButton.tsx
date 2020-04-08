@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity } from "react-native";
-import ThemeColors from "../shared/themeColors";
+import ThemeColors from "../shared/ThemeColors";
 
 const AddNoteButton = (props) => {
   const { navigation } = props;

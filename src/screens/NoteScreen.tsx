@@ -4,7 +4,7 @@ import { INote } from "../components/Note";
 import { TextInput } from "react-native-gesture-handler";
 import Separator from "../components/Separator";
 import RoundedButton from "../components/RoundedButton";
-import ThemeColors from "../shared/themeColors";
+import ThemeColors from "../shared/ThemeColors";
 
 const NoteScreen = (props) => {
   const { navigation } = props;
