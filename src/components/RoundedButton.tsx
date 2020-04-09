@@ -1,15 +1,12 @@
-import React from "react";
-import { View, StyleSheet, Button } from "react-native";
-import ThemeColors from "../shared/ThemeColors";
+import React from 'react';
+import { View, StyleSheet, Button } from 'react-native';
+import ThemeColors from '../shared/ThemeColors';
 
-const RoundedButton = (props) => {
-  const type: ButtonType = props.type;
-  const text: string = props.text;
-  const onClick = props.onClick;
+const RoundedButton = ({ type, text, onPress }: RoundedButtonProps) => {
 
   return (
     <View style={[styles.button, styles[type]]}>
-      <Button onPress={onClick} title={text} color={ThemeColors.white} />
+      <Button onPress={onPress} title={text} color={ThemeColors.white} />
     </View>
   );
 };
@@ -33,6 +30,12 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RoundedButton;
+type RoundedButtonProps = {
+  type: ButtonType,
+  text: string,
+  onPress: () => {},
+};
 
-export type ButtonType = "info" | "success" | "error";
+export type ButtonType = 'info' | 'success' | 'error';
+
+export default RoundedButton;

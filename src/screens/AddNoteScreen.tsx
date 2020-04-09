@@ -1,57 +1,46 @@
-import React from "react";
+import React from 'react';
 import {
   TextInput,
   View,
   Button,
   InputAccessoryView,
-  AsyncStorage,
   StyleSheet,
-} from "react-native";
-import { INote } from "../components/Note";
+} from 'react-native';
+import { Note } from '../models/Note.model';
+import Store from '../services/Store';
 
-const AddNoteScreen = (props) => {
-  const { navigation } = props;
-
-  const [value, onChangeText] = React.useState("Type text");
+const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
+  const [text, setText] = React.useState('Type text');
 
   const onSaveNote = async () => {
-    let data: INote = {
+    const note: Note = {
+      text,
       id: Date.now().toString(),
-      header: "header",
-      text: value,
+      title: 'sssss',
       done: false,
-      tagColor: "",
+      importance: 'primary',
     };
 
-    await AsyncStorage.setItem(data.id, JSON.stringify(data));
+    await Store.add(note);
+
     navigation.goBack();
   };
 
-  const onShowLast = async () => {
-    try {
-      const data = await AsyncStorage.getItem("notes");
-      if (data !== null) {
-        let note = JSON.parse(data);
-        onChangeText(note.text);
-      }
-    } catch (error) {
-      // Error retrieving data
-    }
-  };
+  const onChangeText = (text: string) => setText(text);
 
-  const inputAccessoryViewID = "textInput";
+  const inputAccessoryViewID = 'textInput';
 
   return (
     <View style={styles.container}>
       <TextInput
         style={styles.textInput}
-        onChangeText={(text) => onChangeText(text)}
-        value={value}
+        onChangeText={onChangeText}
+        value={text}
         inputAccessoryViewID={inputAccessoryViewID}
-        multiline
+        multiline={true}
       />
       <InputAccessoryView nativeID={inputAccessoryViewID}>
-        <Button onPress={onSaveNote} title="Save Note" />
+        <Button onPress={onSaveNote} title='Save Note' />
       </InputAccessoryView>
     </View>
   );
@@ -67,5 +56,9 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
 });
+
+type AddNoteScreenProps = {
+  navigation: any,
+};
 
 export default AddNoteScreen;

@@ -1,10 +1,10 @@
-import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import HomeScreen from "./src/screens/HomeScreen";
-import NoteScreen from "./src/screens/NoteScreen";
-import AddNoteScreen from "./src/screens/AddNoteScreen";
-import ThemeColors from "./src/shared/ThemeColors";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import HomeScreen from './src/screens/HomeScreen';
+import NoteScreen from './src/screens/NoteScreen';
+import AddNoteScreen from './src/screens/AddNoteScreen';
+import ThemeColors from './src/shared/ThemeColors';
 
 const ThemeNavigation = {
   headerStyle: {
@@ -19,28 +19,28 @@ const Stack = createStackNavigator();
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
+      <Stack.Navigator initialRouteName='Home'>
         <Stack.Screen
-          name="Home"
+          name='Home'
           component={HomeScreen}
           options={{
-            title: "All Notes",
+            title: 'All Notes',
             ...ThemeNavigation,
           }}
         />
         <Stack.Screen
-          name="Note"
+          name='Note'
           component={NoteScreen}
           options={{
-            title: "Note",
+            title: 'Note',
             ...ThemeNavigation,
           }}
         />
         <Stack.Screen
-          name="AddNote"
+          name='AddNote'
           component={AddNoteScreen}
           options={{
-            title: "New Note",
+            title: 'New Note',
             ...ThemeNavigation,
           }}
         />

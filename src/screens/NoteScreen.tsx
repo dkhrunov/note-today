@@ -1,28 +1,29 @@
-import React from "react";
-import { Text, View, StyleSheet, AsyncStorage } from "react-native";
-import { INote } from "../components/Note";
-import { TextInput } from "react-native-gesture-handler";
-import Separator from "../components/Separator";
-import RoundedButton from "../components/RoundedButton";
-import ThemeColors from "../shared/ThemeColors";
+import React from 'react';
+import { Text, View, StyleSheet } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
+import RoundedButton from '../components/RoundedButton';
+import ThemeColors from '../shared/ThemeColors';
+import { Note } from '../models/Note.model';
+import Store from '../services/Store';
 
-const NoteScreen = (props) => {
-  const { navigation } = props;
-  const note: INote = props.route.params;
-  const [headerValue, onChangeHeaderValue] = React.useState(note.header);
-  const [textValue, onChangeTextValue] = React.useState(note.text);
+const NoteScreen = ({ navigation, route }: NoteScreenProps) => {
+  const note: Note = route.params;
+  const [title, setTitle] = React.useState(note.title);
+  const [text, setText] = React.useState(note.text);
 
-  const onSave = async () => {
-    const newNote = { ...note, header: headerValue, text: textValue };
-    await AsyncStorage.removeItem(note.id);
-    await AsyncStorage.setItem(note.id, JSON.stringify(newNote));
+  const onUpdate = async () => {
+    const newNote = { ...note, text, title };
+    await Store.update(newNote.id, newNote);
     navigation.goBack();
   };
 
-  const onClose = async () => {
-    await AsyncStorage.removeItem(note.id);
+  const onDelete = async () => {
+    await Store.remove(note.id);
     navigation.goBack();
   };
+
+  const onChangeTitle = (value: string) => setTitle(value);
+  const onChangeText = (value: string) => setText(value);
 
   return (
     <View style={styles.container}>
@@ -31,21 +32,19 @@ const NoteScreen = (props) => {
           <Text style={styles.title}>Title :</Text>
           <TextInput
             style={styles.textInput}
-            onChangeText={(text) => onChangeHeaderValue(text)}
-            value={headerValue}
+            onChangeText={onChangeTitle}
+            value={title}
           />
         </View>
-        <Separator />
         <View style={styles.row}>
           <Text style={styles.title}>Note text :</Text>
           <TextInput
             style={styles.textInput}
-            onChangeText={(text) => onChangeTextValue(text)}
-            value={textValue}
-            multiline
+            onChangeText={onChangeText}
+            value={text}
+            multiline={true}
           />
         </View>
-        <Separator />
       </View>
 
       {/* TODO добавить изменение статуса и готовности  */}
@@ -53,8 +52,8 @@ const NoteScreen = (props) => {
       {/* <Text>{JSON.stringify(note)}</Text> */}
 
       <View style={styles.buttonPanel}>
-        <RoundedButton type="info" text="Save" onClick={onSave} />
-        <RoundedButton type="error" text="Delete" onClick={onClose} />
+        <RoundedButton type='info' text='Save' onPress={onUpdate} />
+        <RoundedButton type='error' text='Delete' onPress={onDelete} />
       </View>
     </View>
   );
@@ -66,26 +65,31 @@ const styles = StyleSheet.create({
   },
   editPanel: {
     flex: 1,
-    alignItems: "center",
+    alignItems: 'center',
     padding: 10,
   },
   row: {
-    width: "100%",
+    width: '100%',
   },
   title: {
     fontSize: 20,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginBottom: 5,
   },
   textInput: {
     borderColor: ThemeColors.black,
   },
   buttonPanel: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignContent: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignContent: 'center',
     backgroundColor: ThemeColors.white,
   },
 });
+
+type NoteScreenProps = {
+  navigation: any,
+  route: any,
+};
 
 export default NoteScreen;
