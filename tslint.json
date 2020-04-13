@@ -8,6 +8,7 @@
   "rules": {
 		"jsx-no-multiline-js": false,
     "prefer-array-literal": false,
+    "jsx-boolean-value": false,
     "jsx-no-lambda": false,
     "import-name": [false],
     "variable-name": [

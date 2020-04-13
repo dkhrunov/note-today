@@ -12,8 +12,8 @@ const NoteScreen = ({ navigation, route }: NoteScreenProps) => {
   const [text, setText] = React.useState(note.text);
 
   const onUpdate = async () => {
-    const newNote = { ...note, text, title };
-    await Store.update(newNote.id, newNote);
+    const updatedNote = { ...note, text, title };
+    await Store.update(updatedNote.id, updatedNote);
     navigation.goBack();
   };
 

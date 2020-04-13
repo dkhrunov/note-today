@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 100,
-    backgroundColor: ThemeColors.purple,
+    backgroundColor: ThemeColors.blue,
     shadowColor: '#000000',
     shadowOpacity: 0.3,
     shadowRadius: 5,

@@ -6,14 +6,6 @@ import NoteScreen from './src/screens/NoteScreen';
 import AddNoteScreen from './src/screens/AddNoteScreen';
 import ThemeColors from './src/shared/ThemeColors';
 
-const ThemeNavigation = {
-  headerStyle: {
-    backgroundColor: ThemeColors.purple,
-    shadowOpacity: 0,
-  },
-  headerTintColor: ThemeColors.white,
-};
-
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -48,3 +40,11 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+const ThemeNavigation = {
+  headerStyle: {
+    backgroundColor: ThemeColors.blue,
+    shadowOpacity: 0,
+  },
+  headerTintColor: ThemeColors.white,
+};
