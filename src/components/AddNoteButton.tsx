@@ -7,11 +7,11 @@ const AddNoteButton = ({ navigation }: AddNoteButtonProps) => {
   const onClick = () => navigation.navigate('AddNote');
 
   return (
-    <TouchableOpacity onPress={onClick} style={styles.container}>
-      <View style={styles.button}>
+    <View style={styles.container}>
+      <TouchableOpacity onPress={onClick} style={styles.button}>
         <Text style={styles.text}>+</Text>
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </View>
   );
 };
 
