@@ -50,9 +50,10 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
 
       <View>
         <ModalPicker2
-          header='Select importance'
-          onSelect={value => setImportance(value as NoteImportance)}
+          label='Note importance'
           data={NOTE_IMPORTANCES}
+          modalHeader='Select importance'
+          onSelect={value => setImportance(value as NoteImportance)}
           modalStyles={{ width: '70%', height: '40%' }}
         />
       </View>

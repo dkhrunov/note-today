@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Modal, Text, Picker, Animated } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Modal, Text, Picker, Animated, TouchableOpacity } from 'react-native';
 import ThemeColors from '../shared/ThemeColors';
 import RoundedButton from './RoundedButton';
-import { Input } from 'react-native-elements';
+import { Icon, Badge } from 'react-native-elements';
 
 // tslint:disable-next-line: max-line-length
-const ModalPicker2 = <T extends string>({ header, onModalClose, data, onSelect, modalStyles }: ModalPicker2Props<T>) => {
+const ModalPicker2 = <T extends string>({ label, modalHeader, onModalClose, data, onSelect, modalStyles }: ModalPicker2Props<T>) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [overlayValue] = useState(new Animated.Value(0));
   const [value, setValue] = useState<T>(data[0].value);
+
+  const getLabelByValue = (value: string) => data.find(el => el.value === value)?.label;
 
   const onValueChange = (value: T) => {
     setValue(value);
@@ -33,7 +35,7 @@ const ModalPicker2 = <T extends string>({ header, onModalClose, data, onSelect, 
       {
         toValue: 1,
         duration: 800,
-      }
+      },
     ).start();
   };
 
@@ -51,25 +53,17 @@ const ModalPicker2 = <T extends string>({ header, onModalClose, data, onSelect, 
 
   return (
     <View style={styles.container}>
-      <View style={styles.containerField}>
-        <View style={{ width: '55%' }}>
-          <Input
-            label='Note importance'
-            value={data.find(el => el.value === value)?.label}
-            containerStyle={styles.inputContainer}
-            labelStyle={styles.inputLabel}
-            inputStyle={styles.inputText}
-            disabled
-          />
+      <Text style={styles.label}>{label}</Text>
+
+      <TouchableOpacity onPress={onOpen}>
+        <View style={styles.containerField}>
+          <View style={styles.selectContainer}>
+            <Badge status={value} badgeStyle={styles.badge} />
+            <Text style={styles.select}>{getLabelByValue(value)}</Text>
+            <Icon type='font-awesome' name='chevron-down' style={styles.chevronDown} />
+          </View>
         </View>
-        <View style={{ justifyContent: 'flex-end' }}>
-          <RoundedButton
-            text='Show Modal'
-            type='info'
-            onPress={onOpen}
-          />
-        </View>
-      </View>
+      </TouchableOpacity>
 
       <Modal
         animationType='slide'
@@ -80,8 +74,9 @@ const ModalPicker2 = <T extends string>({ header, onModalClose, data, onSelect, 
       >
         <Animated.View style={animatedStyleOverlay}>
           <View style={[styles.modalView, modalStyles]}>
+
             <View style={styles.modalHeader}>
-              <Text style={styles.headerText}>{header}</Text>
+              <Text style={styles.headerText}>{modalHeader}</Text>
             </View>
 
             <View style={styles.modalContent}>
@@ -107,8 +102,10 @@ const ModalPicker2 = <T extends string>({ header, onModalClose, data, onSelect, 
                 onPress={onClose}
               />
             </View>
+
           </View>
         </Animated.View>
+
       </Modal>
     </View>
   );
@@ -116,13 +113,44 @@ const ModalPicker2 = <T extends string>({ header, onModalClose, data, onSelect, 
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+
+  },
+  label: {
+    fontSize: 20,
+    color: ThemeColors.black,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    paddingHorizontal: 10,
   },
   containerField: {
     width: '100%',
     flexDirection: 'row',
+    paddingHorizontal: 10,
+  },
+  selectContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 15,
+    borderColor: ThemeColors.black,
+  },
+  badge: {
+    height: 18,
+    width: 18,
+    borderRadius: 20,
+    marginTop: 2,
+    marginRight: 10,
+  },
+  select: {
+    width: '84%',
+    fontSize: 18,
+    color: ThemeColors.black,
+  },
+  chevronDown: {
+    width: '10%',
+    justifyContent: 'flex-end',
+    alignContent: 'flex-end',
   },
   inputContainer: {
     marginBottom: 20,
@@ -190,8 +218,9 @@ const styles = StyleSheet.create({
 });
 
 type ModalPicker2Props<T> = {
-  header: string,
+  label: string,
   data: DataItem<T>[],
+  modalHeader: string,
   onModalClose?(): any,
   onSelect(value: T): any,
   modalStyles?: { width: string | number, height: string | number },
