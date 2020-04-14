@@ -9,14 +9,13 @@ const NoteCheckbox = ({ note }: NoteCheckboxProps) => {
   const [status, setStatus] = useState<boolean>(note.done);
 
   const onPress = async () => {
-    setStatus(!status);
-
     const updatedNote: Note = {
       ...note,
       done: !note.done,
     };
 
     await Store.update(note.id, updatedNote);
+    setStatus(!status);
   };
 
   return (

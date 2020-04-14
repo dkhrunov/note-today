@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Button } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { Input } from 'react-native-elements';
 import { Note, NoteImportance, NOTE_IMPORTANCES } from '../models/Note.model';
 import Store from '../services/Store';
@@ -31,42 +31,46 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <Input
-        label='Note title'
-        placeholder='Create a name for the note'
-        containerStyle={styles.inputContainer}
-        labelStyle={styles.inputLabel}
-        onChangeText={onChangeTitle}
-      />
-
-      <Input
-        label='Note text'
-        placeholder='What would you like to do?'
-        containerStyle={styles.inputContainer}
-        labelStyle={styles.inputLabel}
-        multiline={true}
-        onChangeText={onChangeText}
-      />
-
-      <View>
-        <ModalPicker2
-          label='Note importance'
-          data={NOTE_IMPORTANCES}
-          modalHeader='Select importance'
-          onSelect={value => setImportance(value as NoteImportance)}
-          modalStyles={{ width: '70%', height: '40%' }}
+      <ScrollView style={{ flex: 1 }}>
+        <Input
+          label='Note title'
+          placeholder='Create a name for the note'
+          containerStyle={styles.inputContainer}
+          labelStyle={styles.inputLabel}
+          inputStyle={styles.inputText}
+          onChangeText={onChangeTitle}
         />
-      </View>
 
-      <View style={{ width: '100%', justifyContent: 'center', flexDirection: 'row' }}>
+        <Input
+          label='Note text'
+          placeholder='What would you like to do?'
+          containerStyle={styles.inputContainer}
+          labelStyle={styles.inputLabel}
+          inputStyle={styles.inputText}
+          onChangeText={onChangeText}
+          multiline={true}
+          blurOnSubmit={true}
+        />
+
+        <View style={{ marginBottom: 20 }}>
+          <ModalPicker2
+            label='Note importance'
+            data={NOTE_IMPORTANCES}
+            modalHeader='Select importance'
+            onSelect={value => setImportance(value as NoteImportance)}
+            modalStyles={{ width: '70%', height: '40%' }}
+          />
+        </View>
+      </ScrollView>
+
+      <View style={styles.buttonPanel}>
         <RoundedButton
-          text='Save'
+          text='Create'
           type='info'
           onPress={onSaveNote}
           buttonStyle={{ width: '50%' }}
         />
       </View>
-
     </View>
   );
 };
@@ -74,58 +78,24 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: ThemeColors.white,
     padding: 10,
   },
   inputContainer: {
     marginBottom: 20,
-    maxHeight: 180,
   },
   inputLabel: {
-    fontSize: 20,
+    fontSize: 18,
     color: ThemeColors.black,
   },
-  importanceText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: ThemeColors.black,
-    marginBottom: 8,
-    marginLeft: 10,
+  inputText: {
+    fontSize: 15,
   },
-  centeredView: {
-    flex: 1,
+  buttonPanel: {
+    width: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 22,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: 'white',
-    borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  openButton: {
-    backgroundColor: '#F194FF',
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2,
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: 'center',
+    flexDirection: 'row',
+    paddingTop: 10,
   },
 });
 

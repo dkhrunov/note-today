@@ -5,10 +5,10 @@ import RoundedButton from './RoundedButton';
 import { Icon, Badge } from 'react-native-elements';
 
 // tslint:disable-next-line: max-line-length
-const ModalPicker2 = <T extends string>({ label, modalHeader, onModalClose, data, onSelect, modalStyles }: ModalPicker2Props<T>) => {
+const ModalPicker2 = <T extends string>({ label, modalHeader, onModalClose, data, initialValue, onSelect, modalStyles }: ModalPicker2Props<T>) => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [overlayValue] = useState(new Animated.Value(0));
-  const [value, setValue] = useState<T>(data[0].value);
+  const [value, setValue] = useState<T>(initialValue ? initialValue : data[0].value);
 
   const getLabelByValue = (value: string) => data.find(el => el.value === value)?.label;
 
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
 
   },
   label: {
-    fontSize: 20,
+    fontSize: 18,
     color: ThemeColors.black,
     fontWeight: 'bold',
     marginBottom: 10,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   selectContainer: {
     flexDirection: 'row',
     width: '100%',
-    padding: 10,
+    padding: 5,
     borderWidth: 1,
     borderRadius: 15,
     borderColor: ThemeColors.black,
@@ -140,28 +140,19 @@ const styles = StyleSheet.create({
     width: 18,
     borderRadius: 20,
     marginTop: 2,
-    marginRight: 10,
+    marginLeft: 5,
+    marginRight: 5,
   },
   select: {
     width: '84%',
-    fontSize: 18,
+    fontSize: 15,
+    marginTop: 2,
     color: ThemeColors.black,
   },
   chevronDown: {
-    width: '10%',
-    justifyContent: 'flex-end',
-    alignContent: 'flex-end',
-  },
-  inputContainer: {
-    marginBottom: 20,
-    maxHeight: 180,
-  },
-  inputLabel: {
-    fontSize: 20,
-    color: ThemeColors.black,
-  },
-  inputText: {
-    textAlign: 'center',
+    // width: '10%',
+    // justifyContent: 'flex-end',
+    // alignContent: 'flex-end',
   },
   overlay: {
     flex: 1,
@@ -183,11 +174,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  },
-  textStyle: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
   },
   modalHeader: {
 
@@ -223,6 +209,7 @@ type ModalPicker2Props<T> = {
   modalHeader: string,
   onModalClose?(): any,
   onSelect(value: T): any,
+  initialValue?: T,
   modalStyles?: { width: string | number, height: string | number },
 };
 

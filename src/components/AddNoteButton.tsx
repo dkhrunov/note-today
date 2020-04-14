@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, NavigatorIOSProps } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import ThemeColors from '../shared/ThemeColors';
 
 const AddNoteButton = ({ navigation }: AddNoteButtonProps) => {

@@ -22,7 +22,6 @@ const styles = StyleSheet.create({
     color: ThemeColors.white,
     borderRadius: 20,
     minWidth: 100,
-    margin: 20,
     paddingLeft: 10,
     paddingRight: 10,
     paddingTop: 2,

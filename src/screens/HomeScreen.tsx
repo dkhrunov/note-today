@@ -26,7 +26,11 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
 
   useEffect(() => navigation.addListener('focus', onFocusScreen, []));
 
-  const onFocusScreen = async () => setNotes(await Store.getAll());
+  const onFocusScreen = async () => {
+    setLoaing(true);
+    setNotes(await Store.getAll());
+    setLoaing(false);
+  };
 
   const onSearch = (value: string) => setSearchTerm(value);
 

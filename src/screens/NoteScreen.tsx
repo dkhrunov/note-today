@@ -1,18 +1,20 @@
-import React from 'react';
-import { Text, View, StyleSheet } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
+import React, { useState } from 'react';
+import { View, StyleSheet, ScrollView, Text } from 'react-native';
 import RoundedButton from '../components/RoundedButton';
 import ThemeColors from '../shared/ThemeColors';
-import { Note } from '../models/Note.model';
+import { Note, NOTE_IMPORTANCES, NoteImportance } from '../models/Note.model';
 import Store from '../services/Store';
+import { Input } from 'react-native-elements';
+import ModalPicker2 from '../components/ModalPicker2';
 
 const NoteScreen = ({ navigation, route }: NoteScreenProps) => {
   const note: Note = route.params;
-  const [title, setTitle] = React.useState(note.title);
-  const [text, setText] = React.useState(note.text);
+  const [title, setTitle] = useState(note.title);
+  const [text, setText] = useState(note.text);
+  const [importance, setImportance] = useState<NoteImportance>(note.importance);
 
   const onUpdate = async () => {
-    const updatedNote = { ...note, text, title };
+    const updatedNote = { ...note, text, title, importance };
     await Store.update(updatedNote.id, updatedNote);
     navigation.goBack();
   };
@@ -27,33 +29,53 @@ const NoteScreen = ({ navigation, route }: NoteScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.editPanel}>
-        <View style={styles.row}>
-          <Text style={styles.title}>Title :</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={onChangeTitle}
-            value={title}
+      <ScrollView style={{ flex: 1 }}>
+        <Input
+          label='Note title'
+          value={title}
+          containerStyle={styles.inputContainer}
+          labelStyle={styles.inputLabel}
+          inputStyle={styles.inputText}
+          onChangeText={onChangeTitle}
+        />
+
+        <Input
+          label='Note text'
+          value={text}
+          containerStyle={styles.inputContainer}
+          labelStyle={styles.inputLabel}
+          inputStyle={styles.inputText}
+          onChangeText={onChangeText}
+          multiline={true}
+          blurOnSubmit={true}
+        />
+
+        <View style={{ marginBottom: 20 }}>
+          <ModalPicker2
+            label='Note importance'
+            data={NOTE_IMPORTANCES}
+            initialValue={importance}
+            modalHeader='Select importance'
+            onSelect={value => setImportance(value as NoteImportance)}
+            modalStyles={{ width: '70%', height: '40%' }}
           />
         </View>
-        <View style={styles.row}>
-          <Text style={styles.title}>Note text :</Text>
-          <TextInput
-            style={styles.textInput}
-            onChangeText={onChangeText}
-            value={text}
-            multiline={true}
-          />
-        </View>
-      </View>
-
-      {/* TODO добавить изменение статуса и готовности  */}
-
-      {/* <Text>{JSON.stringify(note)}</Text> */}
+      </ScrollView>
 
       <View style={styles.buttonPanel}>
-        <RoundedButton type='info' text='Save' onPress={onUpdate} />
-        <RoundedButton type='error' text='Delete' onPress={onDelete} />
+        <RoundedButton
+          type='info'
+          text='Save'
+          onPress={onUpdate}
+          buttonStyle={{ width: '45%' }}
+        />
+
+        <RoundedButton
+          type='error'
+          text='Delete'
+          onPress={onDelete}
+          buttonStyle={{ width: '45%' }}
+        />
       </View>
     </View>
   );
@@ -62,28 +84,24 @@ const NoteScreen = ({ navigation, route }: NoteScreenProps) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  editPanel: {
-    flex: 1,
-    alignItems: 'center',
+    backgroundColor: ThemeColors.white,
     padding: 10,
   },
-  row: {
-    width: '100%',
+  inputContainer: {
+    marginBottom: 20,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 5,
+  inputLabel: {
+    fontSize: 18,
+    color: ThemeColors.black,
   },
-  textInput: {
-    borderColor: ThemeColors.black,
+  inputText: {
+    fontSize: 15,
   },
   buttonPanel: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignContent: 'center',
-    backgroundColor: ThemeColors.white,
+    paddingTop: 10,
   },
 });
 

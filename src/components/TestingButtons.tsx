@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: ThemeColors.white,
+    padding: 10,
   },
 });
 
