@@ -4,13 +4,24 @@ import ThemeColors from '../shared/ThemeColors';
 import Store from '../services/Store';
 import RoundedButton from '../components/RoundedButton';
 
+/**
+ * Ну а это компонент для ленивых,
+ * если тебе лень создавать самому 10 тестовых заметок
+ * или очистить экран от заметок, ТО ТЕБЕ СЮДА!!!! Велком!
+ */
 const TestingButtons = ({ refreshNotes }: TestingButtonsProps) => {
 
+  /**
+   * Очищает хранилище от заметок.
+   */
   const clearAll = async () => {
     await Store.removeAll();
     await refreshNotes();
   };
 
+  /**
+   * Создает 10 тестовых заметок в хранилище.
+   */
   const makeTestNotes = async () => {
     await Store.addTenNotes();
     refreshNotes();

@@ -2,13 +2,21 @@ import React from 'react';
 import { View, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import ThemeColors from '../shared/ThemeColors';
 
+/**
+ * Кнопка, которая при нажатии перемещает на экран для создания новой заметки.
+ * @param navigation - содержит различные вспомогательные функции,
+ * которые управляют навигацией приложения.
+ */
 const AddNoteButton = ({ navigation }: AddNoteButtonProps) => {
 
-  const onClick = () => navigation.navigate('AddNote');
+  /**
+   * Перемещает на экран создания заметки
+   */
+  const onPress = () => navigation.navigate('AddNote');
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={onClick} style={styles.button}>
+      <TouchableOpacity onPress={onPress} style={styles.button}>
         <Text style={styles.text}>+</Text>
       </TouchableOpacity>
     </View>

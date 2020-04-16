@@ -3,6 +3,10 @@ import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-elements';
 import ThemeColors from '../shared/ThemeColors';
 
+/**
+ * Блок информирующий пользователя
+ * что у него на данный момент нет ни одной заметки.
+ */
 const EmptyNotesMessage = () => (
   <View style={styles.emptyMessageContoiner}>
     <Text h1 style={styles.emptyMessageText}>Oops!</Text>

@@ -16,7 +16,7 @@ export default function App() {
           name='Home'
           component={HomeScreen}
           options={{
-            title: 'All Notes',
+            title: 'Note Today',
             ...ThemeNavigation,
           }}
         />
@@ -24,7 +24,7 @@ export default function App() {
           name='Note'
           component={NoteScreen}
           options={{
-            title: 'Note',
+            title: 'Browse Note',
             ...ThemeNavigation,
           }}
         />

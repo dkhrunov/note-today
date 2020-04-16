@@ -1,6 +1,9 @@
 import { Note } from '../models/Note.model';
 import { AsyncStorage } from 'react-native';
 
+/**
+ * Класс для работы с данными в приложении.
+ */
 class Store {
 
   /**

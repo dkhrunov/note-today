@@ -11,30 +11,61 @@ import TestingButtons from '../components/TestingButtons';
 import withEmpty from '../services/withEmpty';
 import EmptyNotesMessage from '../components/EmptyNotesMassage';
 
+/**
+ * Начальный экран. Список заметок.
+ * @param navigation - содержит различные вспомогательные функции,
+ * которые управляют навигацией приложения.
+ */
 const HomeScreen = ({ navigation }: HomeScreenProps) => {
+  /**
+   * Список заметок.
+   */
   const [notes, setNotes] = useState<Note[]>([]);
+  /**
+   * Ключевое слово для фильтрации заметок.
+   */
   const [searchTerm, setSearchTerm] = useState<string>('');
+  /**
+   * Состояние загрузки данных.
+   */
   const [isLoading, setLoaing] = useState<boolean>(false);
 
+  /**
+   * Сайд эффект, получет все заметки при монтировании компонента
+   * ( когда компонент загружается впервые ).
+   */
   useEffect(() => { gellAllNotes(); }, []);
 
+  /**
+   * Загрузка всех заметок из хранилища.
+   * После получения сохраняет в состоянии компонента.
+   */
   const gellAllNotes = async () => {
-    setLoaing(true);
-    await setNotes(await Store.getAll());
-    setLoaing(false);
-  };
-
-  useEffect(() => navigation.addListener('focus', onFocusScreen, []));
-
-  const onFocusScreen = async () => {
     setLoaing(true);
     setNotes(await Store.getAll());
     setLoaing(false);
   };
 
+  /**
+   * Сайд эффект, подписывается на событие фокуса экрана.
+   * При каждом фокусе экрана обновляет список заметок из хранилища.
+   */
+  useEffect(() => navigation.addListener('focus', gellAllNotes, []));
+
+  /**
+   * При каждом новом слове поиска ( фильтрации ),
+   * записывает значение в состояние.
+   * @param value - новое значение.
+   */
   const onSearch = (value: string) => setSearchTerm(value);
 
+  /**
+   * Список заметок с условным рендерингом при пустом значении. 
+   */
   const NoteListWithEmpty = withEmpty(NoteList, EmptyNotesMessage);
+  /**
+   * Список заметок с условным рендерингом при пустом значении и при загрузке. 
+   */
   const NoteListWithConditionalRendering = withLoadingIndicator(NoteListWithEmpty);
 
   return (

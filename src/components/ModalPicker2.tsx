@@ -4,29 +4,73 @@ import ThemeColors from '../shared/ThemeColors';
 import RoundedButton from './RoundedButton';
 import { Icon, Badge } from 'react-native-elements';
 
-// tslint:disable-next-line: max-line-length
-const ModalPicker2 = <T extends string>({ label, modalHeader, onModalClose, data, initialValue, onSelect, modalStyles }: ModalPicker2Props<T>) => {
+/**
+ * Модальное окно для выбора статуса заметки.
+ * @param props - свойства компонента.
+ */
+const ModalPicker2 = <T extends string>(props: ModalPicker2Props<T>) => {
+
+  const {
+    label,
+    modalHeader,
+    onModalClose,
+    data,
+    initialValue,
+    onSelect,
+    modalStyles,
+  } = props;
+
+  /**
+   * Состояние модального окна (закрыто - false, открытj - true).
+   */
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  /**
+   * Состояние анимации заднего фона во время открытия модального окна.
+   */
   const [overlayValue] = useState(new Animated.Value(0));
+  /**
+   * Состояние выбраного статуса заметки, если initialValue не передан,
+   * то будет установлен по умолчанию первый элемент из списка всех статусов события.
+   */
   const [value, setValue] = useState<T>(initialValue ? initialValue : data[0].value);
 
+  /**
+   * Поиск имени статуса по его значению.
+   * @param value - значение статуса.
+   */
   const getLabelByValue = (value: string) => data.find(el => el.value === value)?.label;
 
+  /**
+   * Устанавливает выбраное значение статуса,
+   * и после вызывает метод onSelect, полученное из пропсов.
+   * @param value - новое выбраное значение статуса.
+   */
   const onValueChange = (value: T) => {
     setValue(value);
     onSelect(value);
   };
 
+  /**
+   * Открывает модальное окно.
+   * И запускает анимацию для перекрытия заднего плана.
+   */
   const onOpen = () => {
     setModalVisible(true);
     startOverlayAnimationOnOpen();
   };
 
+  /**
+   * Закрывает модальное окно.
+   * И устанавливает анимацию заднего плана в исходное состояние.
+   */
   const onClose = () => {
     setModalVisible(!modalVisible);
     overlayValue.setValue(0);
   };
 
+  /**
+   * Стартует анимацию заднего фона.
+   */
   const startOverlayAnimationOnOpen = () => {
     overlayValue.setValue(0);
 
@@ -39,6 +83,10 @@ const ModalPicker2 = <T extends string>({ label, modalHeader, onModalClose, data
     ).start();
   };
 
+  /**
+   * Конфиг анимации.
+   * Настроенная анимация, так что лучше не совать сюда свои загребущие пальчики для изменения.
+   */
   const backgroundColorOnOpen = overlayValue.interpolate(
     {
       inputRange: [0, 0.1, 0.2, 0.3, 0.4, 0.8, 1],
@@ -46,6 +94,9 @@ const ModalPicker2 = <T extends string>({ label, modalHeader, onModalClose, data
     },
   );
 
+  /**
+   * Анимированные стили для заднего фона.
+   */
   const animatedStyleOverlay = {
     ...styles.overlay,
     backgroundColor: backgroundColorOnOpen,
@@ -60,7 +111,12 @@ const ModalPicker2 = <T extends string>({ label, modalHeader, onModalClose, data
           <View style={styles.selectContainer}>
             <Badge status={value} badgeStyle={styles.badge} />
             <Text style={styles.select}>{getLabelByValue(value)}</Text>
-            <Icon type='font-awesome' name='chevron-down' style={styles.chevronDown} />
+            <Icon
+              type='font-awesome'
+              name='chevron-down'
+              style={styles.chevronDown}
+              color={ThemeColors.grey}
+            />
           </View>
         </View>
       </TouchableOpacity>
@@ -133,7 +189,7 @@ const styles = StyleSheet.create({
     padding: 5,
     borderWidth: 1,
     borderRadius: 15,
-    borderColor: ThemeColors.black,
+    borderColor: ThemeColors.grey,
   },
   badge: {
     height: 18,
@@ -150,9 +206,7 @@ const styles = StyleSheet.create({
     color: ThemeColors.black,
   },
   chevronDown: {
-    // width: '10%',
-    // justifyContent: 'flex-end',
-    // alignContent: 'flex-end',
+
   },
   overlay: {
     flex: 1,

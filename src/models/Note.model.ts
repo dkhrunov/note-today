@@ -4,6 +4,7 @@ export type Note = {
   text: string,
   importance: NoteImportance,
   done: boolean,
+  image?: string,
 };
 
 export type NoteImportance = 'success' | 'error' | 'warning' | 'primary';

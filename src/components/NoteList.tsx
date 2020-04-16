@@ -6,12 +6,31 @@ import Store from '../services/Store';
 import NoteCheckbox from './NoteCheckbox';
 import ThemeColors from '../shared/ThemeColors';
 
+/**
+ * Вертикальное отображение списка заметок.
+ * @param props - свойства компонента.
+ */
 const NoteList = ({ navigation, notes, filterTerm }: NoteListProps) => {
+  /**
+   * Список заметок.
+   */
   const [noteList, setNoteList] = useState<Note[]>(notes);
+  /**
+   * Состояние обновление списка заметок.
+   */
   const [isRefreshing, setRefreshing] = useState<boolean>(false);
 
+  /**
+   * Сайд эффект (если ты до сих пор не знаешь что этой, то дальше тебе здесь делать нечего),
+   * при изменения пропса с заметками из родительского компонента,
+   * обновляет его и в состоянии текущего компонента.
+   */
   useEffect(() => setNoteList(notes), [notes]);
 
+  /**
+   * Мемоизированный колбек, вызывается только при изменении состояния обновления списка заметок.
+   * При обновлении списка, загружает их из хранилища.
+   */
   const onRefresh = useCallback(
     async () => {
       setRefreshing(true);
@@ -21,8 +40,18 @@ const NoteList = ({ navigation, notes, filterTerm }: NoteListProps) => {
     [isRefreshing],
   );
 
+  /**
+   * При клике на заметку, перемещает на экран ее просмотра.
+   * @param note - заметка.
+   */
   const onPressNote = (note: Note) => navigation.navigate('Note', note);
 
+  /**
+   * Фильтрация списка заметок по их заголовкам.
+   * Если заголовк заметки содержит ключевую фразу (filterTerm),
+   * то заметка включается в отфильтрованный список.
+   * @param note - заметка.
+   */
   const filetingByTitle = (note: Note) => {
     if (!filterTerm) {
       return true;
@@ -31,6 +60,18 @@ const NoteList = ({ navigation, notes, filterTerm }: NoteListProps) => {
     return note.title.toLowerCase().includes(filterTerm.toLowerCase());
   };
 
+  /**
+   * Получает сокращение из одной буквы, по выжности заметки.
+   * @param importance - важность заметки.
+   */
+  const getImportanceShorthand = (importance: string) => (
+    NOTE_IMPORTANCES.find(elem => elem.value === importance)?.shortHand
+  );
+
+  /**
+   * Компонент заголовка заметки в списке.
+   * @param props - свойста.
+   */
   const NoteSubtitle = ({ text, isNoteDone }: NoteSubtitleProps) => (
     <Text
       numberOfLines={1}
@@ -57,7 +98,7 @@ const NoteList = ({ navigation, notes, filterTerm }: NoteListProps) => {
               titleStyle={styles.ListItemTitle}
               subtitle={<NoteSubtitle text={note.text} isNoteDone={note.done} />}
               badge={{
-                value: NOTE_IMPORTANCES.find(elem => elem.value === note.importance)?.shortHand,
+                value: getImportanceShorthand(note.importance),
                 status: note.importance,
               }}
               leftElement={<NoteCheckbox note={note} />}
@@ -94,6 +135,5 @@ export type NoteListProps = {
   notes: Note[],
   filterTerm?: string,
 };
-
 
 export default NoteList;
