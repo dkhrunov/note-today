@@ -171,7 +171,7 @@ const ModalPicker2 = <T extends string>(props: ModalPicker2Props<T>) => {
 
 const styles = StyleSheet.create({
   container: {
-
+    marginBottom: 20,
   },
   label: {
     fontSize: 18,

@@ -7,8 +7,8 @@ const NoteText = (props: NoteTextProps) => (
   <Input
     label='Note text'
     placeholder='What would you like to do?'
-    value={props.text}
-    onChangeText={value => props.onChangeText(value)}
+    value={props.value}
+    onChangeText={value => props.onChange(value)}
     containerStyle={styles.inputContainer}
     labelStyle={styles.inputLabel}
     inputStyle={styles.inputText}
@@ -31,8 +31,8 @@ const styles = StyleSheet.create({
 });
 
 type NoteTextProps = {
-  text: string,
-  onChangeText(value: string): any,
+  value: string,
+  onChange(value: string): any,
 };
 
 export default NoteText;

@@ -7,8 +7,8 @@ const NoteTitle = (props: NoteTitleProps) => (
   <Input
     label='Note title'
     placeholder='Create a name for the note'
-    value={props.title}
-    onChangeText={value => props.onChangeTitle(value)}
+    value={props.value}
+    onChangeText={value => props.onChange(value)}
     containerStyle={styles.inputContainer}
     labelStyle={styles.inputLabel}
     inputStyle={styles.inputText}
@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
 });
 
 type NoteTitleProps = {
-  title: string,
-  onChangeTitle(value: string): any,
+  value: string,
+  onChange(value: string): any,
 };
 
 export default NoteTitle;

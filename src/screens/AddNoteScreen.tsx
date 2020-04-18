@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, ScrollView } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { Note, NoteImportance } from '../models/Note.model';
+import { Note, NoteImportance, NOTE_IMPORTANCES } from '../models/Note.model';
 import Store from '../services/Store';
 import ThemeColors from '../shared/ThemeColors';
 import RoundedButton from '../components/RoundedButton';
@@ -9,6 +9,10 @@ import * as ImagePicker from 'expo-image-picker';
 import ButtonPanel from '../components/ButtonPanel';
 import NoteInfo from '../components/NoteInfo';
 import withLoadingIndicator from '../services/withLoadingIndicator';
+import NoteTitle from '../components/NoteTitle';
+import NoteText from '../components/NoteText';
+import ModalPicker2 from '../components/ModalPicker2';
+import NotePhoto from '../components/NotePhoto';
 
 /**
  * Экран создания новых заметок.
@@ -98,21 +102,27 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
     navigation.goBack();
   };
 
-  const NoteInfoWithLoading = withLoadingIndicator(NoteInfo);
-
   return (
     <View style={styles.container}>
-      <NoteInfoWithLoading
-        title={title}
-        text={text}
-        importance={importance}
-        imageUri={imageUri}
-        onChangeTitle={value => onChangeTitle(value)}
-        onChangeText={value => onChangeText(value)}
-        onChangeImportance={value => onChangeImportance(value)}
-        onDeletePhoto={() => setImageUri('')}
-        loading={isLoading}
-      />
+      <ScrollView style={{ flex: 1 }}>
+        <NoteTitle value={title} onChange={onChangeTitle} />
+
+        <NoteText value={text} onChange={onChangeText} />
+
+        {/* TODO NoteImportance */}
+        <ModalPicker2
+          label='Note importance'
+          modalHeader='Select importance'
+          data={NOTE_IMPORTANCES}
+          initialValue={importance}
+          onSelect={value => onChangeImportance(value as NoteImportance)}
+          modalStyles={styles.modal}
+        />
+
+        {
+          imageUri ? <NotePhoto imageUri={imageUri} deletePhoto={() => setImageUri('')} /> : null
+        }
+      </ScrollView>
 
       <ButtonPanel>
         <RoundedButton
@@ -139,6 +149,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: ThemeColors.white,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   loading: {
     flex: 1,
@@ -149,6 +161,10 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 50,
+  },
+  modal: {
+    width: '70%',
+    height: '40%',
   },
 });
 

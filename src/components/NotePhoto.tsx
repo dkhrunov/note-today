@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: ThemeColors.white,
+    padding: 10,
   },
   image: {
     width: '100%',
