@@ -35,7 +35,7 @@ const ModalPicker2 = <T extends string>(props: ModalPicker2Props<T>) => {
   const [value, setValue] = useState<T>(initialValue ? initialValue : data[0].value);
 
   /**
-   * Поиск имени статуса по его значению.
+   * Поиск значения по label.
    * @param value - значение статуса.
    */
   const getLabelByValue = (value: string) => data.find(el => el.value === value)?.label;

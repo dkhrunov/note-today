@@ -4,7 +4,7 @@ const ThemeColors = {
   purple: '#7e3ff2',
   blue: '#5886ff',
   red: '#fe3f6c',
-  green: '#47ceae',
+  green: '#39bd5d',
   grey: '#919191',
   lightGrey: '#fafafa',
 };

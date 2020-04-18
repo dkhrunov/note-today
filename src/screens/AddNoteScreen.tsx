@@ -94,8 +94,16 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
               ? <View style={styles.container}>
                 <Image
                   source={{ uri: imageUri }}
-                  style={styles.thumbnail}
+                  style={styles.image}
                 />
+                <View style={styles.deleteImageButton}>
+                  <RoundedButton
+                    text='Delete photo'
+                    type='error'
+                    onPress={() => setImageUri('')}
+                    buttonStyle={{ flex: 1 / 5, flexDirection: 'column' }}
+                  />
+                </View>
               </View>
               : null
           }
@@ -139,7 +147,7 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
           buttonStyle={{ width: '45%' }}
         />
         <RoundedButton
-          text='Pick a photo'
+          text={imageUri ? 'Change a photo' : 'Pick a photo'}
           type='success'
           onPress={onPickImage}
           buttonStyle={{ width: '45%' }}
@@ -164,10 +172,18 @@ const styles = StyleSheet.create({
   inputText: {
     fontSize: 15,
   },
-  thumbnail: {
+  image: {
     width: '100%',
     height: 250,
     resizeMode: 'contain',
+  },
+  deleteImageButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    padding: 10,
+    paddingTop: 30,
+    paddingBottom: 30,
   },
 });
 
