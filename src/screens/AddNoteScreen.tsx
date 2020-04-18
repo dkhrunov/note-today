@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Image, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
 import { Input } from 'react-native-elements';
 import { Note, NoteImportance, NOTE_IMPORTANCES } from '../models/Note.model';
 import Store from '../services/Store';
@@ -31,6 +31,10 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
    * Ссылка на загружаемую фотку.
    */
   const [imageUri, setImageUri] = useState<string>('');
+  /**
+   * Состояние загрузки данных.
+   */
+  const [isLoading, setLoaing] = useState<boolean>(false);
 
   // TODO валидация
   /**
@@ -57,7 +61,10 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
       return;
     }
 
+    // вывод в асинхронный режим, пока идет анимация открытия галереи (ios) 
+    setTimeout(() => setLoaing(true), 200);
     const pickerResult = await ImagePicker.launchImageLibraryAsync();
+    setLoaing(false);
 
     if (pickerResult.cancelled) {
       return;
@@ -86,58 +93,65 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={{ flex: 1 }}>
-        <View style={[styles.container, { padding: 10 }]}>
-          {
-            imageUri
-              // tslint:disable-next-line: jsx-wrap-multiline
-              ? <View style={styles.container}>
-                <Image
-                  source={{ uri: imageUri }}
-                  style={styles.image}
-                />
-                <View style={styles.deleteImageButton}>
-                  <RoundedButton
-                    text='Delete photo'
-                    type='error'
-                    onPress={() => setImageUri('')}
-                    buttonStyle={{ flex: 1 / 5, flexDirection: 'column' }}
-                  />
-                </View>
-              </View>
-              : null
-          }
-          <Input
-            label='Note title'
-            placeholder='Create a name for the note'
-            containerStyle={styles.inputContainer}
-            labelStyle={styles.inputLabel}
-            inputStyle={styles.inputText}
-            onChangeText={onChangeTitle}
-          />
-
-          <Input
-            label='Note text'
-            placeholder='What would you like to do?'
-            containerStyle={styles.inputContainer}
-            labelStyle={styles.inputLabel}
-            inputStyle={styles.inputText}
-            onChangeText={onChangeText}
-            multiline={true}
-            blurOnSubmit={true}
-          />
-
-          <View style={{ marginBottom: 20 }}>
-            <ModalPicker2
-              label='Note importance'
-              data={NOTE_IMPORTANCES}
-              modalHeader='Select importance'
-              onSelect={value => setImportance(value as NoteImportance)}
-              modalStyles={{ width: '70%', height: '40%' }}
-            />
+      {
+        isLoading
+          // tslint:disable-next-line: jsx-wrap-multiline
+          ? <View style={styles.loading}>
+            <ActivityIndicator size='large' color={ThemeColors.blue} />
           </View>
-        </View>
-      </ScrollView>
+          : <ScrollView style={{ flex: 1 }}>
+            <View style={[styles.container, { padding: 10 }]}>
+              {
+                imageUri
+                  // tslint:disable-next-line: jsx-wrap-multiline
+                  ? <View style={styles.container}>
+                    <Image
+                      source={{ uri: imageUri }}
+                      style={styles.image}
+                    />
+                    <View style={styles.deleteImageButton}>
+                      <RoundedButton
+                        text='Delete photo'
+                        type='error'
+                        onPress={() => setImageUri('')}
+                        buttonStyle={{ flex: 1 / 5, flexDirection: 'column' }}
+                      />
+                    </View>
+                  </View>
+                  : null
+              }
+              <Input
+                label='Note title'
+                placeholder='Create a name for the note'
+                containerStyle={styles.inputContainer}
+                labelStyle={styles.inputLabel}
+                inputStyle={styles.inputText}
+                onChangeText={onChangeTitle}
+              />
+
+              <Input
+                label='Note text'
+                placeholder='What would you like to do?'
+                containerStyle={styles.inputContainer}
+                labelStyle={styles.inputLabel}
+                inputStyle={styles.inputText}
+                onChangeText={onChangeText}
+                multiline={true}
+                blurOnSubmit={true}
+              />
+
+              <View style={{ marginBottom: 20 }}>
+                <ModalPicker2
+                  label='Note importance'
+                  data={NOTE_IMPORTANCES}
+                  modalHeader='Select importance'
+                  onSelect={value => setImportance(value as NoteImportance)}
+                  modalStyles={{ width: '70%', height: '40%' }}
+                />
+              </View>
+            </View>
+          </ScrollView>
+      }
 
       <ButtonPanel>
         <RoundedButton
@@ -161,6 +175,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: ThemeColors.white,
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   inputContainer: {
     marginBottom: 20,

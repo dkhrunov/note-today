@@ -60,11 +60,11 @@ const HomeScreen = ({ navigation }: HomeScreenProps) => {
   const onSearch = (value: string) => setSearchTerm(value);
 
   /**
-   * Список заметок с условным рендерингом при пустом значении. 
+   * Список заметок с условным рендерингом при пустом значении.
    */
   const NoteListWithEmpty = withEmpty(NoteList, EmptyNotesMessage);
   /**
-   * Список заметок с условным рендерингом при пустом значении и при загрузке. 
+   * Список заметок с условным рендерингом при пустом значении и при загрузке.
    */
   const NoteListWithConditionalRendering = withLoadingIndicator(NoteListWithEmpty);
 

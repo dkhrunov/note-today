@@ -15,7 +15,8 @@ const withLoadingIndicator = <P extends object>(Component: React.ComponentType<P
           <View style={styles.container}>
             <ActivityIndicator size='large' color={ThemeColors.blue} />
           </View>
-        ) : <Component {...props as P} />;
+        )
+        : <Component {...props as P} />;
     }
   }
 );
