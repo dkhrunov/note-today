@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { View, StyleSheet, Text, ViewStyle, TouchableOpacity } from 'react-native';
 import ThemeColors from '../shared/ThemeColors';
 
@@ -6,23 +6,28 @@ import ThemeColors from '../shared/ThemeColors';
  * Кнопка с загругленными краями.
  * @param props - свойства кнопки.
  */
-const RoundedButton = ({ type, text, onPress, buttonStyle, disabled }: RoundedButtonProps) => {
+const RoundedButton = ({ type, text, onPress, buttonStyle, disabled, children }: RoundedButtonProps) => {
 
   return (
-    <View style={[styles.button, styles[type], disabled ? styles.disabled : null, buttonStyle]}>
-      <TouchableOpacity onPress={onPress}>
-        <Text style={styles.text}>{text}</Text>
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity onPress={onPress} style={styles.content}>
+      <View style={[styles.button, styles[type], disabled ? styles.disabled : null, buttonStyle]}>
+        {children}
+        {text ? <Text style={styles.text}>{text}</Text> : null}
+      </View>
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
+  content: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
   button: {
     backgroundColor: ThemeColors.black,
     color: ThemeColors.white,
     borderRadius: 20,
-    minWidth: 100,
     height: 40,
     paddingLeft: 10,
     paddingRight: 10,
@@ -38,6 +43,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: ThemeColors.white,
     fontSize: 18,
+    marginLeft: 10,
+    marginRight: 10,
   },
   info: {
     backgroundColor: ThemeColors.blue,
@@ -52,10 +59,11 @@ const styles = StyleSheet.create({
 
 type RoundedButtonProps = {
   type: ButtonType,
-  text: string,
   onPress(): any,
+  text?: string,
   buttonStyle?: ViewStyle,
   disabled?: boolean,
+  children?: React.ReactNode,
 };
 
 export type ButtonType = 'info' | 'success' | 'error';

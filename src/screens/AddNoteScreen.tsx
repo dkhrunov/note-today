@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
-import { Input } from 'react-native-elements';
+import { Input, Icon } from 'react-native-elements';
 import { Note, NoteImportance, NOTE_IMPORTANCES } from '../models/Note.model';
 import Store from '../services/Store';
 import ThemeColors from '../shared/ThemeColors';
@@ -111,10 +111,9 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
                     />
                     <View style={styles.deleteImageButton}>
                       <RoundedButton
-                        text='Delete photo'
+                        text='Delete'
                         type='error'
                         onPress={() => setImageUri('')}
-                        buttonStyle={{ flex: 1 / 5, flexDirection: 'column' }}
                       />
                     </View>
                   </View>
@@ -155,17 +154,20 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
 
       <ButtonPanel>
         <RoundedButton
-          text='Create'
           type='info'
           onPress={onSaveNote}
-          buttonStyle={{ width: '45%' }}
-        />
+          buttonStyle={{ width: 60, height: 60, borderRadius: 50 }}
+        >
+          <Icon type='material' name='add' color={ThemeColors.white} />
+        </RoundedButton>
+
         <RoundedButton
-          text={imageUri ? 'Change a photo' : 'Pick a photo'}
           type='success'
           onPress={onPickImage}
-          buttonStyle={{ width: '45%' }}
-        />
+          buttonStyle={{ width: 60, height: 60, borderRadius: 50 }}
+        >
+          <Icon type='material' name='collections' color={ThemeColors.white} />
+        </RoundedButton>
       </ButtonPanel>
     </View>
   );
@@ -201,7 +203,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
     padding: 10,
-    paddingTop: 30,
+    paddingTop: 20,
     paddingBottom: 30,
   },
 });
