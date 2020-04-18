@@ -6,9 +6,14 @@ import ThemeColors from '../shared/ThemeColors';
  * Кнопка с загругленными краями.
  * @param props - свойства кнопки.
  */
-const RoundedButton = ({ type, text, onPress, buttonStyle, disabled, children }: RoundedButtonProps) => {
-
-  return (
+const RoundedButton = ({
+  type,
+  text,
+  onPress,
+  buttonStyle,
+  disabled,
+  children,
+}: RoundedButtonProps) => (
     <TouchableOpacity onPress={onPress} style={styles.content}>
       <View style={[styles.button, styles[type], disabled ? styles.disabled : null, buttonStyle]}>
         {children}
@@ -16,7 +21,6 @@ const RoundedButton = ({ type, text, onPress, buttonStyle, disabled, children }:
       </View>
     </TouchableOpacity>
   );
-};
 
 const styles = StyleSheet.create({
   content: {

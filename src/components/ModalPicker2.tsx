@@ -3,6 +3,7 @@ import { View, StyleSheet, Modal, Text, Picker, Animated, TouchableOpacity } fro
 import ThemeColors from '../shared/ThemeColors';
 import RoundedButton from './RoundedButton';
 import { Icon, Badge } from 'react-native-elements';
+import { NoteImportance } from '../models/Note.model';
 
 /**
  * Модальное окно для выбора статуса заметки.
@@ -48,6 +49,7 @@ const ModalPicker2 = <T extends string>(props: ModalPicker2Props<T>) => {
   const onValueChange = (value: T) => {
     setValue(value);
     onSelect(value);
+    onClose();
   };
 
   /**
@@ -109,7 +111,7 @@ const ModalPicker2 = <T extends string>(props: ModalPicker2Props<T>) => {
       <TouchableOpacity onPress={onOpen}>
         <View style={styles.containerField}>
           <View style={styles.selectContainer}>
-            <Badge status={value} badgeStyle={styles.badge} />
+            <Badge status={value as NoteImportance} badgeStyle={styles.badge} />
             <Text style={styles.select}>{getLabelByValue(value)}</Text>
             <Icon
               type='font-awesome'

@@ -128,9 +128,9 @@ const styles = StyleSheet.create({
 type NoteSubtitleProps = {
   text: string,
   isNoteDone: boolean,
-}
+};
 
-export type NoteListProps = {
+type NoteListProps = {
   navigation: any,
   notes: Note[],
   filterTerm?: string,

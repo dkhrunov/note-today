@@ -7,7 +7,7 @@ import ThemeColors from '../shared/ThemeColors';
  * @param Component - компонент, обернутый в HOC
  */
 const withLoadingIndicator = <P extends object>(Component: React.ComponentType<P>) => (
-  class WithLoadingIndicator extends React.Component<P & IWithLoadingIndicatorProps> {
+  class WithLoadingIndicator extends React.Component<P & WithLoadingIndicatorProps> {
     render() {
       const { loading, ...props } = this.props;
       return loading
@@ -29,8 +29,8 @@ const styles = StyleSheet.create({
   },
 });
 
-interface IWithLoadingIndicatorProps {
+type WithLoadingIndicatorProps = {
   loading: boolean;
-}
+};
 
 export default withLoadingIndicator;

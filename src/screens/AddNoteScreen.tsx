@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Image, Alert, ActivityIndicator } from 'react-native';
-import { Input, Icon } from 'react-native-elements';
-import { Note, NoteImportance, NOTE_IMPORTANCES } from '../models/Note.model';
+import { View, StyleSheet, Alert } from 'react-native';
+import { Icon } from 'react-native-elements';
+import { Note, NoteImportance } from '../models/Note.model';
 import Store from '../services/Store';
 import ThemeColors from '../shared/ThemeColors';
-import ModalPicker2 from '../components/ModalPicker2';
 import RoundedButton from '../components/RoundedButton';
 import * as ImagePicker from 'expo-image-picker';
 import ButtonPanel from '../components/ButtonPanel';
+import NoteInfo from '../components/NoteInfo';
+import withLoadingIndicator from '../services/withLoadingIndicator';
 
 /**
  * Экран создания новых заметок.
@@ -50,6 +51,12 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
   const onChangeText = (value: string) => setText(value);
 
   /**
+   * Обработчик события при изменения важности заметки.
+   * @param value - новое значение.
+   */
+  const onChangeImportance = (value: NoteImportance) => setImportance(value);
+
+  /**
    * Выбор фотографии из галереии, при первом запуске запросит права,
    * после получения прав, можно будет выбрать фото из галереии и ее ссылка сохранится в состоянии.
    */
@@ -61,7 +68,7 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
       return;
     }
 
-    // вывод в асинхронный режим, пока идет анимация открытия галереи (ios) 
+    // вывод в асинхронный режим, пока идет анимация открытия галереи (ios)
     setTimeout(() => setLoaing(true), 200);
     const pickerResult = await ImagePicker.launchImageLibraryAsync();
     setLoaing(false);
@@ -91,72 +98,27 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
     navigation.goBack();
   };
 
+  const NoteInfoWithLoading = withLoadingIndicator(NoteInfo);
+
   return (
     <View style={styles.container}>
-      {
-        isLoading
-          // tslint:disable-next-line: jsx-wrap-multiline
-          ? <View style={styles.loading}>
-            <ActivityIndicator size='large' color={ThemeColors.blue} />
-          </View>
-          : <ScrollView style={{ flex: 1 }}>
-            <View style={[styles.container, { padding: 10 }]}>
-              {
-                imageUri
-                  // tslint:disable-next-line: jsx-wrap-multiline
-                  ? <View style={styles.container}>
-                    <Image
-                      source={{ uri: imageUri }}
-                      style={styles.image}
-                    />
-                    <View style={styles.deleteImageButton}>
-                      <RoundedButton
-                        text='Delete'
-                        type='error'
-                        onPress={() => setImageUri('')}
-                      />
-                    </View>
-                  </View>
-                  : null
-              }
-              <Input
-                label='Note title'
-                placeholder='Create a name for the note'
-                containerStyle={styles.inputContainer}
-                labelStyle={styles.inputLabel}
-                inputStyle={styles.inputText}
-                onChangeText={onChangeTitle}
-              />
-
-              <Input
-                label='Note text'
-                placeholder='What would you like to do?'
-                containerStyle={styles.inputContainer}
-                labelStyle={styles.inputLabel}
-                inputStyle={styles.inputText}
-                onChangeText={onChangeText}
-                multiline={true}
-                blurOnSubmit={true}
-              />
-
-              <View style={{ marginBottom: 20 }}>
-                <ModalPicker2
-                  label='Note importance'
-                  data={NOTE_IMPORTANCES}
-                  modalHeader='Select importance'
-                  onSelect={value => setImportance(value as NoteImportance)}
-                  modalStyles={{ width: '70%', height: '40%' }}
-                />
-              </View>
-            </View>
-          </ScrollView>
-      }
+      <NoteInfoWithLoading
+        title={title}
+        text={text}
+        importance={importance}
+        imageUri={imageUri}
+        onChangeTitle={value => onChangeTitle(value)}
+        onChangeText={value => onChangeText(value)}
+        onChangeImportance={value => onChangeImportance(value)}
+        onDeletePhoto={() => setImageUri('')}
+        loading={isLoading}
+      />
 
       <ButtonPanel>
         <RoundedButton
           type='info'
           onPress={onSaveNote}
-          buttonStyle={{ width: 60, height: 60, borderRadius: 50 }}
+          buttonStyle={styles.button}
         >
           <Icon type='material' name='add' color={ThemeColors.white} />
         </RoundedButton>
@@ -164,7 +126,7 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
         <RoundedButton
           type='success'
           onPress={onPickImage}
-          buttonStyle={{ width: 60, height: 60, borderRadius: 50 }}
+          buttonStyle={styles.button}
         >
           <Icon type='material' name='collections' color={ThemeColors.white} />
         </RoundedButton>
@@ -183,28 +145,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
   },
-  inputContainer: {
-    marginBottom: 20,
-  },
-  inputLabel: {
-    fontSize: 18,
-    color: ThemeColors.black,
-  },
-  inputText: {
-    fontSize: 15,
-  },
-  image: {
-    width: '100%',
-    height: 250,
-    resizeMode: 'contain',
-  },
-  deleteImageButton: {
-    flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
-    padding: 10,
-    paddingTop: 20,
-    paddingBottom: 30,
+  button: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
   },
 });
 

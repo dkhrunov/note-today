@@ -18,6 +18,6 @@ const withEmpty = <P extends object, T extends object>(Component: React.Componen
 
 type WithEmptyProps = {
   empty: boolean;
-}
+};
 
 export default withEmpty;

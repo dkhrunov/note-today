@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, ScrollView, Text, Image } from 'react-native';
+import { View, StyleSheet, Alert } from 'react-native';
 import RoundedButton from '../components/RoundedButton';
 import ThemeColors from '../shared/ThemeColors';
-import { Note, NOTE_IMPORTANCES, NoteImportance } from '../models/Note.model';
+import { Note, NoteImportance } from '../models/Note.model';
 import Store from '../services/Store';
-import { Input } from 'react-native-elements';
-import ModalPicker2 from '../components/ModalPicker2';
+import { Icon } from 'react-native-elements';
 import ButtonPanel from '../components/ButtonPanel';
+import withLoadingIndicator from '../services/withLoadingIndicator';
+import NoteInfo from '../components/NoteInfo';
+import * as ImagePicker from 'expo-image-picker';
 
 /**
  * Экран просмотра заметки.
@@ -33,22 +35,15 @@ const NoteScreen = ({ navigation, route }: NoteScreenProps) => {
   const [importance, setImportance] = useState<NoteImportance>(note.importance);
 
   /**
-   * Обновление заметки, и переход на начальный экран.
+   * Ссылка на загружаемую фотку.
    */
-  const onUpdate = async () => {
-    const updatedNote = { ...note, text, title, importance };
-    await Store.update(updatedNote.id, updatedNote);
-    navigation.goBack();
-  };
-
+  const [imageUri, setImageUri] = useState<string>(note.image || '');
   /**
-   * Удаление заметки из хранилища, и переход на начальный экран.
+   * Состояние загрузки данных.
    */
-  const onDelete = async () => {
-    await Store.remove(note.id);
-    navigation.goBack();
-  };
+  const [isLoading, setLoaing] = useState<boolean>(false);
 
+  // TODO валидация
   /**
    * Обработчик события при изменения заголовка заметки в input`e.
    * @param value - новое значение.
@@ -61,67 +56,93 @@ const NoteScreen = ({ navigation, route }: NoteScreenProps) => {
    */
   const onChangeText = (value: string) => setText(value);
 
+  /**
+   * Обработчик события при изменения важности заметки.
+   * @param value - новое значение.
+   */
+  const onChangeImportance = (value: NoteImportance) => setImportance(value);
+
+  /**
+   * Выбор фотографии из галереии, при первом запуске запросит права,
+   * после получения прав, можно будет выбрать фото из галереии и ее ссылка сохранится в состоянии.
+   */
+  const onPickImage = async () => {
+    const permissionResult = await ImagePicker.requestCameraRollPermissionsAsync();
+
+    if (!permissionResult.granted) {
+      Alert.alert('Permission to access camera roll is required!');
+      return;
+    }
+
+    // вывод в асинхронный режим, пока идет анимация открытия галереи (ios)
+    setTimeout(() => setLoaing(true), 200);
+    const pickerResult = await ImagePicker.launchImageLibraryAsync();
+    setLoaing(false);
+
+    if (pickerResult.cancelled) {
+      return;
+    }
+
+    setImageUri(pickerResult.uri);
+  };
+
+  /**
+   * Обновление заметки, и переход на начальный экран.
+   */
+  const onUpdate = async () => {
+    const updatedNote = { ...note, text, title, importance, image: imageUri };
+    await Store.update(updatedNote.id, updatedNote);
+    navigation.goBack();
+  };
+
+  /**
+   * Удаление заметки из хранилища, и переход на начальный экран.
+   */
+  const onDelete = async () => {
+    await Store.remove(note.id);
+    navigation.goBack();
+  };
+
+  const NoteInfoWithLoading = withLoadingIndicator(NoteInfo);
+
   return (
     <View style={styles.container}>
-      <ScrollView style={{ flex: 1 }}>
-        <View style={[styles.container, { padding: 10 }]}>
-          {
-            note.image
-              // tslint:disable-next-line: jsx-wrap-multiline
-              ? <View style={styles.container}>
-                <Image
-                  source={{ uri: note.image }}
-                  style={styles.thumbnail}
-                />
-              </View>
-              : null
-          }
-          <Input
-            label='Note title'
-            value={title}
-            containerStyle={styles.inputContainer}
-            labelStyle={styles.inputLabel}
-            inputStyle={styles.inputText}
-            onChangeText={onChangeTitle}
-          />
-
-          <Input
-            label='Note text'
-            value={text}
-            containerStyle={styles.inputContainer}
-            labelStyle={styles.inputLabel}
-            inputStyle={styles.inputText}
-            onChangeText={onChangeText}
-            multiline={true}
-            blurOnSubmit={true}
-          />
-
-          <View style={{ marginBottom: 20 }}>
-            <ModalPicker2
-              label='Note importance'
-              data={NOTE_IMPORTANCES}
-              initialValue={importance}
-              modalHeader='Select importance'
-              onSelect={value => setImportance(value as NoteImportance)}
-              modalStyles={{ width: '70%', height: '40%' }}
-            />
-          </View>
-        </View>
-      </ScrollView>
+      <NoteInfoWithLoading
+        title={title}
+        text={text}
+        importance={importance}
+        imageUri={imageUri}
+        onChangeTitle={value => onChangeTitle(value)}
+        onChangeText={value => onChangeText(value)}
+        onChangeImportance={value => onChangeImportance(value)}
+        onDeletePhoto={() => setImageUri('')}
+        loading={isLoading}
+      />
 
       <ButtonPanel>
         <RoundedButton
           type='info'
-          text='Save'
           onPress={onUpdate}
-          buttonStyle={{ width: '45%' }}
-        />
+          buttonStyle={styles.button}
+        >
+          <Icon type='material' name='edit' color={ThemeColors.white} />
+        </RoundedButton>
+
+        <RoundedButton
+          type='success'
+          onPress={onPickImage}
+          buttonStyle={styles.button}
+        >
+          <Icon type='material' name='collections' color={ThemeColors.white} />
+        </RoundedButton>
+
         <RoundedButton
           type='error'
-          text='Delete'
           onPress={onDelete}
-          buttonStyle={{ width: '45%' }}
-        />
+          buttonStyle={styles.button}
+        >
+          <Icon type='material' name='delete' color={ThemeColors.white} />
+        </RoundedButton>
       </ButtonPanel>
     </View>
   );
@@ -132,20 +153,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: ThemeColors.white,
   },
-  inputContainer: {
-    marginBottom: 20,
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
   },
-  inputLabel: {
-    fontSize: 18,
-    color: ThemeColors.black,
-  },
-  inputText: {
-    fontSize: 15,
-  },
-  thumbnail: {
-    width: 300,
-    height: 300,
-    resizeMode: 'contain',
+  button: {
+    width: 60,
+    height: 60,
+    borderRadius: 50,
   },
 });
 

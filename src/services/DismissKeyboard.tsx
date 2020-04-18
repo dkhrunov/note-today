@@ -15,7 +15,7 @@ const DismissKeyboard = ({ children }: DismissKeyboardProps) => (
 
 const styles = {
   container: { height: '100%', width: '100%' },
-}
+};
 
 type DismissKeyboardProps = {
   children: any,
