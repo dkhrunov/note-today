@@ -3,15 +3,17 @@ import { StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
 import ThemeColors from '../shared/ThemeColors';
 
-const NoteTitle = (props: NoteTitleProps) => (
+const NoteText = (props: NoteTextProps) => (
   <Input
-    label='Note title'
-    placeholder='Create a name for the note'
-    value={props.title}
-    onChangeText={value => props.onChangeTitle(value)}
+    label='Note text'
+    placeholder='What would you like to do?'
+    value={props.text}
+    onChangeText={value => props.onChangeText(value)}
     containerStyle={styles.inputContainer}
     labelStyle={styles.inputLabel}
     inputStyle={styles.inputText}
+    multiline={true}
+    blurOnSubmit={true}
   />
 );
 
@@ -28,9 +30,9 @@ const styles = StyleSheet.create({
   },
 });
 
-type NoteTitleProps = {
-  title: string,
-  onChangeTitle(value: string): any,
+type NoteTextProps = {
+  text: string,
+  onChangeText(value: string): any,
 };
 
-export default NoteTitle;
+export default NoteText;
