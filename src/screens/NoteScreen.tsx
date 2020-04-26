@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert } from 'react-native';
+import { View, StyleSheet, Alert, ActivityIndicator, ScrollView } from 'react-native';
 import RoundedButton from '../components/RoundedButton';
 import ThemeColors from '../shared/ThemeColors';
 import { Note, NoteImportance } from '../models/Note.model';
 import Store from '../services/Store';
 import { Icon } from 'react-native-elements';
 import ButtonPanel from '../components/ButtonPanel';
-import withLoadingIndicator from '../services/withLoadingIndicator';
-import NoteInfo from '../components/NoteInfo';
 import * as ImagePicker from 'expo-image-picker';
+import NoteTitle from '../components/NoteTitle';
+import NoteText from '../components/NoteText';
+import SelectNoteImportance from '../components/SelectNoteImportance';
+import NotePhoto from '../components/NotePhoto';
 
 /**
  * Экран просмотра заметки.
@@ -103,21 +105,28 @@ const NoteScreen = ({ navigation, route }: NoteScreenProps) => {
     navigation.goBack();
   };
 
-  const NoteInfoWithLoading = withLoadingIndicator(NoteInfo);
-
   return (
     <View style={styles.container}>
-      <NoteInfoWithLoading
-        title={title}
-        text={text}
-        importance={importance}
-        imageUri={imageUri}
-        onChangeTitle={value => onChangeTitle(value)}
-        onChangeText={value => onChangeText(value)}
-        onChangeImportance={value => onChangeImportance(value)}
-        onDeletePhoto={() => setImageUri('')}
-        loading={isLoading}
-      />
+      {
+        isLoading
+          ? (
+            <View style={styles.loading}>
+              <ActivityIndicator size='large' color={ThemeColors.blue} />
+            </View>
+          )
+          : (
+            <ScrollView style={{ flex: 1 }}>
+              <NoteTitle value={title} onChange={onChangeTitle} />
+              <NoteText value={text} onChange={onChangeText} />
+              <SelectNoteImportance value={importance} onChange={onChangeImportance} />
+              {
+                imageUri
+                  ? <NotePhoto imageUri={imageUri} deletePhoto={() => setImageUri('')} />
+                  : null
+              }
+            </ScrollView>
+          )
+      }
 
       <ButtonPanel>
         <RoundedButton
@@ -125,7 +134,7 @@ const NoteScreen = ({ navigation, route }: NoteScreenProps) => {
           onPress={onUpdate}
           buttonStyle={styles.button}
         >
-          <Icon type='material' name='edit' color={ThemeColors.white} />
+          <Icon type='material' name='done' color={ThemeColors.white} />
         </RoundedButton>
 
         <RoundedButton
@@ -152,6 +161,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: ThemeColors.white,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   loading: {
     flex: 1,

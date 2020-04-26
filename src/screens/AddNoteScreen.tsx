@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, StyleSheet, Alert, ScrollView, ActivityIndicator } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { Note, NoteImportance, NOTE_IMPORTANCES } from '../models/Note.model';
+import { Note, NoteImportance } from '../models/Note.model';
 import Store from '../services/Store';
 import ThemeColors from '../shared/ThemeColors';
 import RoundedButton from '../components/RoundedButton';
 import * as ImagePicker from 'expo-image-picker';
 import ButtonPanel from '../components/ButtonPanel';
-import NoteInfo from '../components/NoteInfo';
-import withLoadingIndicator from '../services/withLoadingIndicator';
 import NoteTitle from '../components/NoteTitle';
 import NoteText from '../components/NoteText';
-import ModalPicker2 from '../components/ModalPicker2';
 import NotePhoto from '../components/NotePhoto';
+import SelectNoteImportance from '../components/SelectNoteImportance';
 
 /**
  * Экран создания новых заметок.
@@ -104,25 +102,26 @@ const AddNoteScreen = ({ navigation }: AddNoteScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={{ flex: 1 }}>
-        <NoteTitle value={title} onChange={onChangeTitle} />
-
-        <NoteText value={text} onChange={onChangeText} />
-
-        {/* TODO NoteImportance */}
-        <ModalPicker2
-          label='Note importance'
-          modalHeader='Select importance'
-          data={NOTE_IMPORTANCES}
-          initialValue={importance}
-          onSelect={value => onChangeImportance(value as NoteImportance)}
-          modalStyles={styles.modal}
-        />
-
-        {
-          imageUri ? <NotePhoto imageUri={imageUri} deletePhoto={() => setImageUri('')} /> : null
-        }
-      </ScrollView>
+      {
+        isLoading
+          ? (
+            <View style={styles.loading}>
+              <ActivityIndicator size='large' color={ThemeColors.blue} />
+            </View>
+          )
+          : (
+            <ScrollView style={{ flex: 1 }}>
+              <NoteTitle value={title} onChange={onChangeTitle} />
+              <NoteText value={text} onChange={onChangeText} />
+              <SelectNoteImportance value={importance} onChange={onChangeImportance} />
+              {
+                imageUri
+                  ? <NotePhoto imageUri={imageUri} deletePhoto={() => setImageUri('')} />
+                  : null
+              }
+            </ScrollView>
+          )
+      }
 
       <ButtonPanel>
         <RoundedButton

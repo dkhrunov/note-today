@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Modal, Text, Picker, Animated, TouchableOpacity } from 'react-native';
 import ThemeColors from '../shared/ThemeColors';
 import RoundedButton from './RoundedButton';
-import { Icon, Badge } from 'react-native-elements';
+import { Icon, Badge, BadgeProps } from 'react-native-elements';
 import { NoteImportance } from '../models/Note.model';
 
 /**
@@ -17,6 +17,7 @@ const ModalPicker2 = <T extends string>(props: ModalPicker2Props<T>) => {
     onModalClose,
     data,
     initialValue,
+    badge,
     onSelect,
     modalStyles,
   } = props;
@@ -111,7 +112,9 @@ const ModalPicker2 = <T extends string>(props: ModalPicker2Props<T>) => {
       <TouchableOpacity onPress={onOpen}>
         <View style={styles.containerField}>
           <View style={styles.selectContainer}>
-            <Badge status={value as NoteImportance} badgeStyle={styles.badge} />
+            {
+              badge ? <Badge status={badge.status} badgeStyle={styles.badge} /> : null
+            }
             <Text style={styles.select}>{getLabelByValue(value)}</Text>
             <Icon
               type='font-awesome'
@@ -187,6 +190,7 @@ const styles = StyleSheet.create({
   },
   selectContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     width: '100%',
     padding: 5,
     borderWidth: 1,
@@ -265,6 +269,7 @@ type ModalPicker2Props<T> = {
   modalHeader: string,
   onModalClose?(): any,
   onSelect(value: T): any,
+  badge?: BadgeProps,
   initialValue?: T,
   modalStyles?: { width: string | number, height: string | number },
 };
