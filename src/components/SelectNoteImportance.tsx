@@ -3,6 +3,10 @@ import ModalPicker2 from './ModalPicker2';
 import { NOTE_IMPORTANCES, NoteImportance } from '../models/Note.model';
 import { StyleSheet } from 'react-native';
 
+/**
+ * Presentational компонент, отражающий select поле,
+ * с модальном окном для выбора важности заметки.
+ */
 const SelectNoteImportance = (props: SelectNoteImportanceProps) => (
   <ModalPicker2
     label='Note importance'

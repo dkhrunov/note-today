@@ -3,6 +3,9 @@ import { StyleSheet } from 'react-native';
 import { Input } from 'react-native-elements';
 import ThemeColors from '../shared/ThemeColors';
 
+/**
+ * Presentational компонент, отражающий поле для ввода текста заметки.
+ */
 const NoteText = (props: NoteTextProps) => (
   <Input
     label='Note text'

@@ -3,7 +3,7 @@ import { View, StyleSheet, Text, ViewStyle, TouchableOpacity } from 'react-nativ
 import ThemeColors from '../shared/ThemeColors';
 
 /**
- * Кнопка с загругленными краями.
+ * Кнопка с закруглёнными краями.
  * @param props - свойства кнопки.
  */
 const RoundedButton = ({

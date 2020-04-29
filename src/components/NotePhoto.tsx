@@ -3,6 +3,11 @@ import { View, Image, StyleSheet } from 'react-native';
 import RoundedButton from './RoundedButton';
 import ThemeColors from '../shared/ThemeColors';
 
+/**
+ * Отображает изображение по URI файла.
+ * @param imageUri - URI файла.
+ * @param deletePhoto - Callback для кнопки удаления фото.
+ */
 const NotePhoto = ({ imageUri, deletePhoto }: NotePhotoProps) => (
   <View style={styles.container}>
     <Image
